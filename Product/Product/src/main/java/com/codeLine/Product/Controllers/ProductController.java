@@ -5,6 +5,8 @@ import com.codeLine.Product.Entities.Product;
 import com.codeLine.Product.Services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -17,7 +19,14 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping("createProduct")
-    public String createProduct(@Valid @RequestBody ProductRequest request) {
+    public String createProduct(@Valid @RequestBody ProductRequest request, BindingResult result) {
+        if(result.hasErrors()){
+            List<String> errors=result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return "Errors: " + String.join(", ", errors);
+        }
         Product product = Product.builder()
                 .name(request.getName())
                 .category(request.getCategory())
@@ -27,19 +36,6 @@ public class ProductController {
         productService.addProduct(product);
         return "Added Product with ID: " + product.getId();
     }
-//    @PostMapping("createProduct")
-//    public String createProduct(@Valid @RequestBody ProductRequest requestObj) {
-//        Product product = Product.builder()
-//            .name(requestObj.getName())
-//            .category(requestObj.getCategory())
-//            .price(requestObj.getPrice())
-//            .availableQuantity(requestObj.getAvailableQuantity())
-//            .createdDate(new Date())
-//            .isActive(true)
-//            .build();
-//                productService.addProduct(requestObj);
-//        return "Added Product with ID: " + product.getId();
-//    }
 
     @GetMapping("getAllProducts")
     public List<Product> getAllProducts() {

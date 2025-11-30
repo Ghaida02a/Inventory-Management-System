@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background: #f3f4f6;
+          margin: 0;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        nav {
+          width: 100%;
+          background: #BC8F8F;
+          padding: 10px;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+        }
+        nav a {
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+          padding: 6px 12px;
+          border-radius: 4px;
+        }
+        nav a:hover {
+          background: #A52A2A;
+        }
+        h1 {
+          margin: 20px 0 10px;
+          text-align: center;
+        }
+        form {
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+          max-width: 400px;
+          width: 100%;
+        }
+        label {
+          display: block;
+          margin-bottom: 8px;
+          font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 16px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+        }
+        button {
+          background: #BC8F8F;
+          color: #A52A2A;
+          border: none;
+          padding: 10px 16px;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-right: 8px;
+        }
+        button:hover {
+          background: #1e40af;
+          color: white;
+        }
+        #response {
+          margin-top: 20px;
+          font-size: 16px;
+          color: black;
+          background: #FEF2F2;
+          padding: 10px;
+          border-radius: 6px;
+          display: none;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="createProduct.html">➕ Add Product</a>
+    <a href="updateProduct.html">✏️ Update Product</a>
+    <a href="getProductById.html">🔍 Get Product By ID</a>
+    <a href="deleteProduct.html">🗑️ Delete Product</a>
+    <a href="getAllProducts.html">📋 View All Products</a>
+</nav>
+
+<h1>Create a Product</h1>
+<form id="productForm">
+    <label for="name">Product Name:</label>
+    <input type="text" id="name" name="name" placeholder="Enter product name"/>
+
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" placeholder="Enter category"/>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" step="0.01" placeholder="Enter Price"/>
+
+    <label for="availableQuantity">Available Quantity:</label>
+    <input type="number" id="availableQuantity" name="availableQuantity" placeholder="Enter Available quantity"/>
+
+    <button type="submit">Create Product</button>
+    <button type="button" onclick="refreshForm()">🔄 Refresh</button>
+</form>
+
+<div id="response"></div>
+
+<script>
+    const form = document.getElementById("productForm");
+    const responseBox = document.getElementById("response");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const product = {
+        name: document.getElementById("name").value,
+        category: document.getElementById("category").value,
+        price: parseFloat(document.getElementById("price").value),
+        availableQuantity: parseInt(document.getElementById("availableQuantity").value)
+      };
+
+      try {
+        const res = await fetch("http://localhost:8080/createProduct", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(product)
+        });
+
+        const text = await res.text();
+        responseBox.textContent = text;
+        responseBox.style.display = "block";
+      } catch (err) {
+        responseBox.textContent = "Error creating product: " + err;
+        responseBox.style.display = "block";
+      }
+    });
+
+    function refreshForm() {
+      form.reset();
+      responseBox.style.display = "none";
+    }
+</script>
+
+</body>
+</html>

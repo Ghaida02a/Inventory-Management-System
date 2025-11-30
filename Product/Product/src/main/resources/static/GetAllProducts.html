@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background: #f3f4f6;
+          margin: 0;
+          padding: 20px;
+        }
+        nav {
+          width: 100%;
+          background: #BC8F8F;
+          padding: 10px;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          margin-bottom: 20px;
+        }
+        nav a {
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+          padding: 6px 12px;
+          border-radius: 4px;
+        }
+        nav a:hover {
+          background: #A52A2A;
+        }
+        h1 {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          background: white;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        th, td {
+          padding: 12px;
+          border: 1px solid #ccc;
+          text-align: left;
+        }
+        th {
+          background: #BC8F8F;
+          color: white;
+        }
+        tr:nth-child(even) {
+          background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<!-- ✅ Navigation Menu -->
+<nav>
+    <a href="createProduct.html">➕ Add Product</a>
+    <a href="updateProduct.html">✏️ Update Product</a>
+    <a href="getProductById.html">🔍 Get Product By ID</a>
+    <a href="deleteProduct.html">🗑️ Delete Product</a>
+    <a href="getAllProducts.html">📋 View All Products</a>
+</nav>
+
+<h1>Product List</h1>
+<table id="productTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Available Quantity</th>
+        <th>Created Date</th>
+        <th>Updated Date</th>
+        <th>Active</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    const tbody = document.querySelector("#productTable tbody");
+
+    async function loadProducts() {
+      try {
+        const res = await fetch("http://localhost:8080/getAllProducts");
+        const products = await res.json();
+
+        tbody.innerHTML = ""; // clear old rows
+
+        products.forEach(product => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${product.id ?? "—"}</td>
+            <td>${product.name ?? "—"}</td>
+            <td>${product.category ?? "—"}</td>
+            <td>${product.price ?? "—"}</td>
+            <td>${product.availableQuantity ?? "—"}</td>
+            <td>${product.createdDate ?? "—"}</td>
+            <td>${product.updatedDate ?? "—"}</td>
+            <td>${product.isActive ? "Yes" : "No"}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Error loading products:", err);
+      }
+    }
+
+    loadProducts();
+</script>
+</body>
+</html>
