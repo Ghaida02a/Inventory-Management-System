@@ -5,8 +5,9 @@ import com.codeLine.Product.Entities.Product;
 import com.codeLine.Product.Services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -18,23 +19,11 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @PostMapping("createProduct")
-    public String createProduct(@Valid @RequestBody ProductRequest request, BindingResult result) {
-        if(result.hasErrors()){
-            List<String> errors=result.getFieldErrors()
-                    .stream()
-                    .map(FieldError::getDefaultMessage)
-                    .toList();
-            return "Errors: " + String.join(", ", errors);
-        }
-        Product product = Product.builder()
-                .name(request.getName())
-                .category(request.getCategory())
-                .price(request.getPrice())
-                .availableQuantity(request.getAvailableQuantity())
-                .build();
-        productService.addProduct(product);
-        return "Added Product with ID: " + product.getId();
+    // Create Product
+    @PostMapping("/createProduct")
+    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductRequest request) {
+        productService.addProduct(request); // save product
+        return ResponseEntity.status(HttpStatus.CREATED).body("Added Successfully");
     }
 
     @GetMapping("getAllProducts")
@@ -44,18 +33,31 @@ public class ProductController {
     }
 
     @PutMapping("updateProduct")
-    public Product updateProduct(@RequestBody Product updateObjFromUser) throws Exception {
-        return productService.updateProduct(updateObjFromUser);
+    public ResponseEntity<Product> updateProduct(@Valid @RequestBody ProductRequest request) throws Exception {
+        Product updated = productService.updateProduct(request);
+        return ResponseEntity.ok(updated);
     }
 
     @GetMapping("getProductById/{id}")
-    public Product getProduct(@PathVariable int id) throws Exception {
-        return productService.getProductById(id);
+    public ResponseEntity<Product> getProduct(@PathVariable int id) throws Exception {
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @DeleteMapping("deleteProduct/{id}")
-    public String deleteStudent(@PathVariable int id) throws Exception {
+    public ResponseEntity<String> deleteProduct(@PathVariable int id) throws Exception {
         productService.deleteProduct(id);
-        return "SUCCESS";
+        return ResponseEntity.ok("SUCCESS");
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getFieldErrors()
+                .stream()
+                .findFirst()
+                .map(error -> error.getDefaultMessage()) // just display the message
+                .orElse("Validation error");
+
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 }
