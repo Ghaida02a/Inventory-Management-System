@@ -1,6 +1,7 @@
 package com.codeLine.Product.DTOCreateResponse;
 
 import com.codeLine.Product.Entities.Product;
+import com.codeLine.Product.Exceptions.CustomException;
 import com.codeLine.Product.Helper.Constants;
 import com.codeLine.Product.Helper.Utils;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,9 @@ public class ProductUpdateResponse {
     }
 
     //DTO Response -> Entity
-    public static Product convertDTOToEntity(ProductUpdateResponse dto) {
+    public static Product convertDTOToEntity(ProductUpdateResponse dto) throws CustomException {
         if (Utils.isNull(dto)) {
-            throw new IllegalArgumentException(Constants.PRODUCT_UPDATE_RESPONSE_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_UPDATE_RESPONSE_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         return Product.builder()
                 .id(dto.getId())

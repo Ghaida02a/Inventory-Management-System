@@ -25,6 +25,7 @@ public class Constants {
     public static final String PRODUCT_UPDATE_REQUEST_IS_NULL = "Product Update Request cannot be empty and must contain an ID";
     public static final String PRODUCT_UPDATE_REQUEST_ID_NOT_VALID = "Product ID in update request is either null or not active";
 
-
+    //HTTP Status Codes
+    public static final int HTTP_STATUS_BAD_REQUEST = 400;
 
 }

@@ -3,6 +3,7 @@ import com.codeLine.Product.DTOCreateRequest.ProductCreateRequest;
 import com.codeLine.Product.DTOCreateRequest.ProductUpdateRequest;
 import com.codeLine.Product.DTOCreateResponse.ProductCreateResponse;
 import com.codeLine.Product.Entities.Product;
+import com.codeLine.Product.Exceptions.CustomException;
 import com.codeLine.Product.Helper.Constants;
 import com.codeLine.Product.Helper.Utils;
 import com.codeLine.Product.Repositories.ProductRepository;
@@ -28,7 +29,7 @@ public class ProductService {
     }
 
     //Add new product
-    public ProductCreateResponse addProduct(ProductCreateRequest requestedProduct) {
+    public ProductCreateResponse addProduct(ProductCreateRequest requestedProduct) throws CustomException {
         if(Utils.isNull(requestedProduct)){
             throw new IllegalArgumentException(Constants.PRODUCT_IS_NULL);
         }

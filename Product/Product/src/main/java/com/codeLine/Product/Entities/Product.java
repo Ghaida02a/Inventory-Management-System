@@ -1,6 +1,7 @@
 package com.codeLine.Product.Entities;
 
 import com.codeLine.Product.DTOCreateRequest.ProductCreateRequest;
+import com.codeLine.Product.Exceptions.CustomException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -27,12 +28,12 @@ public class Product {
     Boolean isActive;
 
     //Entity → DTO
-    public static ProductCreateRequest toDTO(Product entity) {
+    public static ProductCreateRequest toDTO(Product entity) throws CustomException {
         return ProductCreateRequest.convertProductToProductDTO(entity);
     }
 
     //DTO → Entity
-    public static Product fromDTO(ProductCreateRequest dto) {
+    public static Product fromDTO(ProductCreateRequest dto) throws CustomException {
         return ProductCreateRequest.convertProductDTOToProduct(dto);
     }
 }

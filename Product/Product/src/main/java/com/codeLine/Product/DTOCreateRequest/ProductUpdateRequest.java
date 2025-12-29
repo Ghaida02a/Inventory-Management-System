@@ -1,6 +1,7 @@
 package com.codeLine.Product.DTOCreateRequest;
 
 import com.codeLine.Product.Entities.Product;
+import com.codeLine.Product.Exceptions.CustomException;
 import com.codeLine.Product.Helper.Constants;
 import com.codeLine.Product.Helper.Utils;
 import lombok.AllArgsConstructor;
@@ -22,29 +23,29 @@ public class ProductUpdateRequest {
     //Validation for create
     public static void validateForUpdate(ProductUpdateRequest dto) throws Exception {
         if (Utils.isNull(dto)) {
-            throw new IllegalArgumentException(Constants.PRODUCT_REQUEST_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_REQUEST_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         if(Utils.isNull(dto.getId())) {
-            throw new IllegalArgumentException(Constants.PRODUCT_ID_UPDATE_REQUEST_ID_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_ID_UPDATE_REQUEST_ID_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         if (Utils.isBlank(dto.getName())) {
-            throw new IllegalArgumentException(Constants.PRODUCT_NAME_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_NAME_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         if (Utils.isNull(dto.getPrice()) || dto.getPrice() <= Constants.PRODUCT_PRICE_IS_LESS_THAN_ZERO) {
-            throw new IllegalArgumentException(Constants.PRODUCT_PRICE_IS_NEGATIVE);
+            throw new CustomException(Constants.PRODUCT_PRICE_IS_NEGATIVE, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         if (Utils.isBlank(dto.getCategory())) {
-            throw new IllegalArgumentException(Constants.PRODUCT_CATEGORY_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_CATEGORY_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         if (Utils.isNull(dto.getAvailableQuantity()) || dto.getAvailableQuantity() < Constants.PRODUCT__AVAILABLE_QUANTITY_IS_LESS_THAN_ZERO) {
-            throw new IllegalArgumentException(Constants.PRODUCT_AVAILABLE_QUANTITY_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_AVAILABLE_QUANTITY_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
     }
 
     //Convert DTO → Entity
-    public static Product convertProductDTOToProduct(ProductUpdateRequest dto) {
+    public static Product convertProductDTOToProduct(ProductUpdateRequest dto) throws CustomException{
         if (Utils.isNull(dto)) {
-            throw new IllegalArgumentException(Constants.PRODUCT_REQUEST_TO_UPDATE_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_REQUEST_TO_UPDATE_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         return Product.builder()
                 .id(dto.getId())
@@ -56,9 +57,9 @@ public class ProductUpdateRequest {
     }
 
     //Convert Entity → DTO
-    public static ProductUpdateRequest convertProductToProductDTO(Product entity) {
+    public static ProductUpdateRequest convertProductToProductDTO(Product entity) throws CustomException {
         if (Utils.isNull(entity)) {
-            throw new IllegalArgumentException(Constants.PRODUCT_IS_NULL);
+            throw new CustomException(Constants.PRODUCT_IS_NULL, Constants.HTTP_STATUS_BAD_REQUEST);
         }
         return ProductUpdateRequest.builder()
                 .id(entity.getId())
