@@ -79,13 +79,13 @@
     </style>
 </head>
 <body>
-<!-- Menu -->
 <nav>
-    <a href="createProduct.html">➕ Add Product</a>
-    <a href="updateProduct.html">✏️ Update Product</a>
-    <a href="getProductById.html">🔍 Get Product By ID</a>
-    <a href="deleteProduct.html">🗑️ Delete Product</a>
-    <a href="getAllProducts.html">📋 View All Products</a>
+    <a href="index.html"> Home</a>
+    <a href="CreateProduct.html">➕ Add Product</a>
+    <a href="UpdateProduct.html">✏️ Update Product</a>
+    <a href="GetProductById.html">🔍 Get Product By ID</a>
+    <a href="DeleteProduct.html">🗑️ Delete Product</a>
+    <a href="GetAllProducts.html">📋 View All Products</a>
 </nav>
 
 <h1>Update a Product</h1>
@@ -127,7 +127,7 @@
       };
 
       try {
-        const res = await fetch("http://localhost:8080/updateProduct", {
+        const res = await fetch("http://localhost:8080/product", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(product)
